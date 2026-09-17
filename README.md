@@ -67,7 +67,7 @@ A **512×512px WebP** image is recommended. Make sure the image URL can be opene
 This template uses one line of OJapp Free to turn the page into a home screen app:
 
 ```html
-<script src="https://ojapp.app/js/ojapp.js"></script>
+<script src="https://ojapp.app/js/ojapp_1p1a.js"></script>
 ```
 
 [Learn more about OJapp Free](https://ojapp.app/one-page-one-app/en)
