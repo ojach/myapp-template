@@ -2,13 +2,13 @@
 
 An easy, single-file HTML template that brings your favorite web pages together in a mobile app-style launcher.
 
-**OJapp Free** is already included in `my-app-template-en.html`. Publish the page and add it to your home screen to launch it like an app.
+**OJapp Free** is already included in `index.html`. Publish the page and add it to your home screen to launch it like an app.
 
 ## How to use
 
 ### 1. Open the HTML file
 
-Open `my-app-template-en.html` in a text editor.
+Open `index.html` in a text editor.
 
 ### 2. Edit four sections
 
