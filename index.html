@@ -235,6 +235,44 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
     }
+    
+    
+    @media (display-mode: standalone) {
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    pointer-events: none;
+
+    background:
+      radial-gradient(circle at 20% 70%, #71e9ff 0, transparent 35%),
+      radial-gradient(circle at 70% 60%, #bd76ff 0, transparent 40%),
+      radial-gradient(circle at 50% 90%, #ff8ecf 0, transparent 38%);
+
+    filter: blur(30px);
+    transform: translateY(110%);
+    animation: aurora-launch 1.2s .2s ease-in-out forwards;
+  }
+}
+
+@keyframes aurora-launch {
+  0% {
+    transform: translateY(110%);
+  }
+
+  35% {
+    transform: translateY(20%);
+  }
+
+  65% {
+    transform: translateY(-20%);
+  }
+
+  100% {
+    transform: translateY(-120%);
+  }
+}
   </style>
 </head>
 
