@@ -24,8 +24,8 @@
       Change the color values below to customize the overall look
     ========================================================== */
     :root {
-      --bg-start: #f9f7ff;
-      --bg-end: #edf4ff;
+      --bg-top-end: #b1f0f8;
+      --bg-after-scroll: #edf4ff;
       --text: #242333;
       --muted: #777489;
       --accent: #7658e8;
@@ -38,7 +38,7 @@
 
     * { box-sizing: border-box; }
 
-    html { min-height: 100%; background: var(--bg-end); }
+    html { min-height: 100%; background: var(--bg-top-end); }
 
     body {
       margin: 0;
@@ -49,7 +49,7 @@
       background:
          radial-gradient( circle at 12% 25%, rgba(255, 255, 255, .18), transparent 27rem),
          radial-gradient( circle at 92% 92%, rgba(91, 176, 255, .18), transparent 25rem),
-         linear-gradient( to bottom, var(--bg-end) 0, var(--bg-start) 150px, var(--bg-start) 38%, var(--bg-end) 100%);
+         linear-gradient( to bottom, var(--bg-top-end) 0, var(--bg-after-scroll) 160px, var(--bg-after-scroll) 38%, var(--bg-top-end) 100%);
       -webkit-font-smoothing: antialiased;
     }
 
@@ -236,47 +236,22 @@
       *, *::before, *::after { animation: none !important; transition: none !important; }
     }
     
-    
     @media (display-mode: standalone) {
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 999999;
-    pointer-events: none;
-
-    background:
-      radial-gradient(circle at 20% 70%, #71e9ff 0, transparent 35%),
-      radial-gradient(circle at 70% 60%, #bd76ff 0, transparent 40%),
-      radial-gradient(circle at 50% 90%, #ff8ecf 0, transparent 38%);
-
-    filter: blur(30px);
-    transform: translateY(110%);
-    animation: aurora-launch 1.2s .2s ease-in-out forwards;
-  }
-}
-
-@keyframes aurora-launch {
-  0% {
-    transform: translateY(110%);
-  }
-
-  35% {
-    transform: translateY(20%);
-  }
-
-  65% {
-    transform: translateY(-20%);
-  }
-
-  100% {
-    transform: translateY(-120%);
-  }
-}
+      .remove-blur {
+        position: fixed;
+        inset: 0 0 auto;
+        height: 11px;
+        pointer-events: none;
+        background-color: var(--bg-top-end);
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+    }
   </style>
 </head>
 
 <body>
+  <div class="remove-blur" aria-hidden="true"></div>
   <main class="app-shell">
     <header class="hero">
       <!-- =====================================================
@@ -434,6 +409,48 @@
     });
     count.textContent = `${MY_APPS.length} APPS`;
     empty.style.display = MY_APPS.length ? "none" : "block";
+    
+    (() => {
+      const standalone =
+        matchMedia("(display-mode: standalone)").matches ||
+        navigator.standalone === true;
+
+      if (!standalone) return;
+
+      const strip = document.querySelector(".remove-blur");
+      if (!strip) return;
+
+      const readColor = (name) => {
+      const value = getComputedStyle(document.documentElement)
+        .getPropertyValue(name).trim().replace("#", "");
+
+      const hex = value.length === 3
+        ? [...value].map((c) => c + c).join("")
+        : value;
+
+      return [
+        parseInt(hex.slice(0, 2), 16),
+        parseInt(hex.slice(2, 4), 16),
+        parseInt(hex.slice(4, 6), 16)
+      ];
+    };
+
+    const top = readColor("--bg-top-end");
+    const after = readColor("--bg-after-scroll");
+    const changeDistance = 160; // この距離で色Bになり、その後は固定
+
+    function update() {
+    const progress = Math.min((scrollY + 12) / changeDistance, 1);
+      const rgb = top.map((value, i) =>
+        Math.round(value + (after[i] - value) * progress)
+      );
+
+      strip.style.backgroundColor = `rgb(${rgb.join(",")})`;
+    }
+
+    update();
+    addEventListener("scroll", update, { passive: true });
+  })();    
   </script>
 </body>
 </html>
